@@ -194,5 +194,5 @@ def is_same_as(df_to_compare, **assert_kwargs):
 
 __all__ = ['is_monotonic', 'is_same_as', 'is_shape', 'none_missing',
            'unique_index', 'within_range', 'within_set', 'has_dtypes',
-           'verify', 'verify_all', 'verify_any', 'within_n_std']
+           'has_columns', 'verify', 'verify_all', 'verify_any', 'within_n_std']
 
