@@ -5,6 +5,7 @@ from functools import wraps
 
 import engarde.checks as ck
 
+
 def none_missing(columns=None):
     """Asserts that no missing values (NaN) are found"""
     def decorate(func):
@@ -38,6 +39,7 @@ def unique_index():
         return wrapper
     return decorate
 
+
 def is_monotonic(items=None, increasing=None, strict=False):
     def decorate(func):
         @wraps(func)
@@ -48,6 +50,7 @@ def is_monotonic(items=None, increasing=None, strict=False):
             return result
         return wrapper
     return decorate
+
 
 def within_set(items):
     """
@@ -102,6 +105,7 @@ def within_n_std(n=3):
         return wrapper
     return decorate
 
+
 def has_dtypes(items):
     """
     Tests that the dtypes are as specified in items.
@@ -115,6 +119,18 @@ def has_dtypes(items):
         return wrapper
     return decorate
 
+def has_columns(columns):
+    """
+    Tests that a dataframe contains required columns
+    """
+    def decorate(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            ck.has_columns(result, columns)
+            return result
+        return wrapper
+    return decorate
 
 def one_to_many(unitcol, manycol):
     """ Tests that each value in ``manycol`` only is associated with
@@ -124,7 +140,7 @@ def one_to_many(unitcol, manycol):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
-            ck.one_to_many(results, unitcol, manycol)
+            ck.one_to_many(result, unitcol, manycol)
             return result
         return wrapper
     return decorate
@@ -136,17 +152,20 @@ def verify(func, *args, **kwargs):
     """
     return _verify(func, None, *args, **kwargs)
 
+
 def verify_all(func, *args, **kwargs):
     """
     Assert that all of `func(*args, **kwargs)` are true.
     """
     return _verify(func, 'all', *args, **kwargs)
 
+
 def verify_any(func, *args, **kwargs):
     """
     Assert that any of `func(*args, **kwargs)` are true.
     """
     return _verify(func, 'any', *args, **kwargs)
+
 
 def _verify(func, _kind, *args, **kwargs):
     d = {None: ck.verify, 'all': ck.verify_all, 'any': ck.verify_any}
