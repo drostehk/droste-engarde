@@ -69,3 +69,10 @@ wheelhouse/
 *.zip
 *.csv
 
+# Pycharm files
+.idea
+.idea/droste-engarde.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/vcs.xml

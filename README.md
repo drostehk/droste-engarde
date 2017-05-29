@@ -1,7 +1,7 @@
-Engarde
+Droste Engarde
 =======
 
-[![Build Status](https://travis-ci.org/TomAugspurger/engarde.svg)](https://travis-ci.org/TomAugspurger/engarde)
+Droste's fork of TomAugspurger's engarde repo.
 
 A python package for defensive data analysis.
 Documentation is at [readthedocs](http://engarde.readthedocs.org/en/latest/).
