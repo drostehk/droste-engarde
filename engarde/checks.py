@@ -42,6 +42,7 @@ def none_missing(df, columns=None):
         raise
     return df
 
+
 def is_monotonic(df, items=None, increasing=None, strict=False):
     """
     Asserts that the DataFrame is monotonic.
@@ -68,7 +69,7 @@ def is_monotonic(df, items=None, increasing=None, strict=False):
         if increasing:
             good = getattr(s, 'is_monotonic_increasing')
         elif increasing is None:
-            good = getattr(s, 'is_monotonic') | getattr(s, 'is_monotonic_decreasing')
+            good = getattr(s, 'is_monotonic') | getattr(s, 'is_monotonic_decreasing')  # noqa
         else:
             good = getattr(s, 'is_monotonic_decreasing')
         if strict:
@@ -82,6 +83,7 @@ def is_monotonic(df, items=None, increasing=None, strict=False):
         if not good:
             raise AssertionError
     return df
+
 
 def is_shape(df, shape):
     """
@@ -101,7 +103,7 @@ def is_shape(df, shape):
     """
     try:
         check = np.all(np.equal(df.shape, shape) | (np.equal(shape, [-1, -1]) |
-                                                    np.equal(shape, [None, None])))
+                                                    np.equal(shape, [None, None])))  # noqa
         assert check
     except AssertionError as e:
         msg = ("Expected shape: {}\n"
@@ -109,6 +111,7 @@ def is_shape(df, shape):
         e.args = (msg,)
         raise
     return df
+
 
 def unique_index(df):
     """
@@ -151,6 +154,7 @@ def within_set(df, items=None):
             raise AssertionError('Not in set', bad)
     return df
 
+
 def within_range(df, items=None):
     """
     Assert that a DataFrame is within a range.
@@ -171,6 +175,7 @@ def within_range(df, items=None):
             bad = (lower > df[k]) | (upper < df[k])
             raise AssertionError("Outside range", bad)
     return df
+
 
 def within_n_std(df, n=3):
     """
@@ -194,6 +199,7 @@ def within_n_std(df, n=3):
         msg = generic.bad_locations(~inliers)
         raise AssertionError(msg)
     return df
+
 
 def has_dtypes(df, items):
     """
@@ -241,7 +247,8 @@ def one_to_many(df, unitcol, manycol):
     subset = df[[manycol, unitcol]].drop_duplicates()
     for many in subset[manycol].unique():
         if subset[subset[manycol] == many].shape[0] > 1:
-            msg = "{} in {} has multiple values for {}".format(many, manycol, unitcol)
+            msg = "{} in {} has multiple values for {}".format(many, manycol,
+                                                               unitcol)
             raise AssertionError(msg)
 
     return df
@@ -270,7 +277,34 @@ def is_same_as(df, df_to_compare, **kwargs):
     return df
 
 
+def has_columns(df, columns, **kwargs):
+    """
+    Assert that a pandas dataframe contains given columns
+
+    Parameters
+    ==========
+    :param df: 
+    :param columns: 
+
+    df : pandas DataFrame
+    columns : list of columns
+    **kwargs : dict
+        keyword arguments passed through to panda's ``assert_frame_equal``
+
+    Returns
+    =======
+    :return: df : pandas DataFrame
+    """
+    missing_columns = []
+    for x in columns:
+        if x not in df.columns:
+            missing_columns.append(x)
+
+    if len(missing_columns) > 0:
+        raise AssertionError("DataFrame does not contain "
+                             "required columns: {}".format(missing_columns))
+    return df
+
 __all__ = ['is_monotonic', 'is_same_as', 'is_shape', 'none_missing',
            'unique_index', 'within_n_std', 'within_range', 'within_set',
-           'has_dtypes', 'verify', 'verify_all', 'verify_any']
-
+           'has_dtypes', 'has_columns' 'verify', 'verify_all', 'verify_any']
